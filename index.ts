@@ -1,0 +1,103 @@
+import * as Logger from 'bunyan';
+import { IRoutesMergerConfig, Model, TApp } from 'routes-merger';
+import * as restify from 'restify';
+import { dirname } from 'path';
+
+const restifyInitApp = (app: restify.Server,
+                        with_app: IRoutesMergerConfig['with_app'],
+                        skip_app_logging: boolean,
+                        skip_app_version_routes: boolean,
+                        package_: IRoutesMergerConfig['package_']): restify.Server => {
+    if (with_app != null) app = with_app(app) as restify.Server;
+    app.use(restify.plugins.queryParser());
+    app.use(restify.plugins.bodyParser());
+
+    if (!skip_app_logging) {
+        const event = 'after';
+        app.on(event, restify.plugins.auditLogger({
+            event, log: Logger.createLogger({
+                name: 'audit',
+                stream: process.stdout
+            })
+        }));
+    }
+
+    if (!skip_app_version_routes)
+        ['/', '/version', '/api', '/api/version'].map(route_path => app.get(route_path,
+            (req, res, next) => {
+                res.json({ version: package_.version });
+                return next();
+            }
+        ));
+
+    return app;
+};
+
+const restifyStartApp = (skip_start_app: boolean,
+                         app: restify.Server,
+                         listen_port: number,
+                         onServerStart: IRoutesMergerConfig['onServerStart'],
+                         logger: Logger,
+                         callback: IRoutesMergerConfig['callback']): void | restify.Server =>
+    skip_start_app ? callback != null && callback(null, app)
+        : app.listen(listen_port, () => {
+            logger.info('%s listening at %s', app.name, app.url);
+
+            if (onServerStart != null)
+                return onServerStart(app.url, app,
+                    callback == null ? /* tslint:disable:no-empty*/ () => {} : callback
+                );
+            else if (callback != null)
+                return callback(void 0, app);
+            return app;
+        });
+
+const handleErr = (callback: (err: Error, res?: TApp) => any) => (e: Error) => {
+    if (callback == null) throw e;
+    return callback(e);
+};
+
+export const routesMerger = (options?: IRoutesMergerConfig): TApp | void => {
+    ['routes', 'server_type', 'package_', 'app_name'].forEach(opt =>
+        options[opt] == null && handleErr(options.callback)(TypeError(`\`options.${opt}\` required.`))
+    );
+    if (options.skip_start_app == null) options.skip_start_app = false;
+    if (options.skip_app_version_routes == null) options.skip_app_version_routes = false;
+    if (options.skip_app_logging == null) options.skip_app_logging = false;
+    if (options.logger == null) options.logger = Logger.createLogger({ name: 'routes-merger' });
+
+    // Init server obj
+    if (options.app != null) /* tslint:disable:no-empty */ {
+    } else if (options.server_type === 'restify') {
+        options.app = restifyInitApp(
+            options.app == null ? restify.createServer(
+                Object.assign({ name: options.app_name }, options.createServerArgs || {}))
+                : options.app as restify.Server,
+            options.with_app, options.skip_app_logging, options.skip_app_version_routes, options.package_
+        );
+    } else throw Error(`NotImplemented: ${options.server_type}; TODO`);
+
+    const routes = new Set<string>();
+    for (const [dir, program] of options.routes as Map<string, Model>)
+        /* tslint:disable:no-unused-expression */
+        (['routes', 'route', 'admin'].some(r => dir.indexOf(r) > -1) && Object
+                .keys(program)
+                .forEach((route: string) =>
+                    typeof program[route] === 'function'
+                    && (program[route] as ((app: TApp, namespace: string) => void))(
+                    options.app, `${options.root}/${dirname(dir)}`))
+            && routes.add(dir));
+    options.logger.info(`${options.server_type} registered routes:\t`, Array.from(routes), ';');
+
+    if (options.server_type === 'restify')
+        return restifyStartApp(
+            options.skip_start_app,
+            options.app as restify.Server,
+            options.listen_port,
+            options.onServerStart,
+            options.logger,
+            options.callback
+        );
+    if (typeof options.callback === 'undefined') return options.app;
+    return options.callback(void 0, options.app);
+};

@@ -1,0 +1,31 @@
+{
+  "name": "routes-merger",
+  "version": "0.0.1",
+  "description": "Generic--connect, restify, express--function to merge routes in from a Map.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamuelMarks/routes-merger.git"
+  },
+  "author": "Samuel Marks <samuel@offscale.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SamuelMarks/routes-merger/issues"
+  },
+  "homepage": "https://github.com/SamuelMarks/routes-merger#readme",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "connect": "^3.6.3",
+    "express": "^4.15.4",
+    "restify": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/bunyan": "^1.8.2",
+    "@types/connect": "^3.4.30",
+    "@types/express": "^4.0.36",
+    "@types/restify": "^5.0.1"
+  }
+}
