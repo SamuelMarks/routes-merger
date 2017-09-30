@@ -79,14 +79,15 @@ export const routesMerger = (options?: IRoutesMergerConfig): TApp | void => {
 
     const routes = new Set<string>();
     for (const [dir, program] of options.routes as Map<string, Model>)
-        /* tslint:disable:no-unused-expression */
-        (['routes', 'route', 'admin'].some(r => dir.indexOf(r) > -1) && Object
+        if (['routes', 'route', 'admin'].some(r => dir.indexOf(r) > -1)) {
+            Object
                 .keys(program)
                 .forEach((route: string) =>
                     typeof program[route] === 'function'
                     && (program[route] as ((app: TApp, namespace: string) => void))(
-                    options.app, `${options.root}/${dirname(dir)}`))
-            && routes.add(dir));
+                    options.app, `${options.root}/${dirname(dir)}`));
+            routes.add(dir);
+        }
     options.logger.info(`${options.server_type} registered routes:\t`, Array.from(routes), ';');
 
     if (options.server_type === 'restify')
