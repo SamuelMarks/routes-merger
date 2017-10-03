@@ -33,8 +33,9 @@ export interface IRoutesMergerConfig {
     root?: string;
     listen_port?: number;
     skip_app_logging?: boolean;
-    skip_app_version_routes?: boolean;
     skip_start_app?: boolean;
+    skip_app_version_routes?: boolean;
+    version_routes_kwargs?: {};
     logger?: Logger;
     with_app?: (app: TApp) => TApp;
 
