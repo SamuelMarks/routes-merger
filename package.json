@@ -1,6 +1,6 @@
 {
   "name": "routes-merger",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Generic--connect, restify, express--function to merge routes in from a Map.",
   "main": "index.js",
   "scripts": {
@@ -19,13 +19,13 @@
   "dependencies": {
     "bunyan": "^1.8.12",
     "connect": "^3.6.5",
-    "express": "^4.16.1",
-    "restify": "^6.0.1"
+    "express": "^4.16.2",
+    "restify": "^6.3.1"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.3",
     "@types/connect": "^3.4.31",
-    "@types/express": "^4.0.37",
-    "@types/restify": "^5.0.5"
+    "@types/express": "^4.0.39",
+    "@types/restify": "^5.0.6"
   }
 }
