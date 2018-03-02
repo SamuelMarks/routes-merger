@@ -18,14 +18,14 @@
   "homepage": "https://github.com/SamuelMarks/routes-merger#readme",
   "dependencies": {
     "bunyan": "^1.8.12",
-    "connect": "^3.6.5",
+    "connect": "^3.6.6",
     "express": "^4.16.2",
     "restify": "^6.3.4"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.4",
     "@types/connect": "^3.4.31",
-    "@types/express": "^4.11.0",
+    "@types/express": "^4.11.1",
     "@types/restify": "^5.0.7"
   }
 }
