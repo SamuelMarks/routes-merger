@@ -50,6 +50,10 @@ Update [routes-merger-dist](https://github.com/SamuelMarks/routes-merger-dist):
 
     find -type f -not -name "*.ts" -and -not -path "./.git/*" -and -not -path "./node-modules/*" -and -not -name '*.map' | cpio -pdamv ../routes-merger-dist
 
+Or just a simple:
+
+    cp -r {*.md,*.js*} ../routes-merger-dist
+
 ## Future work
 
   - Finish implementing Express, Connect and generic
