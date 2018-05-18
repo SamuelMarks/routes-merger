@@ -1,7 +1,7 @@
 routes-merger
 =============
 
-Generic--connect, restify, express--function to merge routes in from a Map.
+Generic--connect, restify, express--function to merge routes from a Map.
 
 Supported 'servers':
 
