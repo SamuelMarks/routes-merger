@@ -48,7 +48,8 @@ Install the latest Node.JS, `npm i -g typings typescript`, then:
 
 Update [routes-merger-dist](https://github.com/SamuelMarks/routes-merger-dist):
 
-    find -type f -not -name "*.ts" -and -not -path "./.git/*" -and -not -path "./node-modules/*" -and -not -name '*.map' | cpio -pdamv ../routes-merger-dist
+    dst="${PWD##*/}"-dist;
+    find -type f -not -path './node_modules*' -a -not -path './.git*' -a -not -path './.idea*' -a -not -path './typings*' -a -not -name '*.ts' -not -name 'ts*' | cpio -pdamv ../"$dst";
 
 Or just a simple:
 
