@@ -7,11 +7,14 @@ const restifyInitApp = (app: restify.Server,
                         with_app: IRoutesMergerConfig['with_app'],
                         skip_app_logging: IRoutesMergerConfig['skip_app_logging'],
                         skip_app_version_routes: IRoutesMergerConfig['skip_app_version_routes'],
+                        skip_use: IRoutesMergerConfig['skip_use'],
                         package_: IRoutesMergerConfig['package_'],
                         version_routes_kwargs: IRoutesMergerConfig['version_routes_kwargs']): restify.Server => {
     if (with_app != null) app = with_app(app) as restify.Server;
-    app.use(restify.plugins.queryParser());
-    app.use(restify.plugins.bodyParser());
+    if (!skip_use) {
+        app.use(restify.plugins.queryParser());
+        app.use(restify.plugins.bodyParser());
+    }
 
     if (!skip_app_logging) {
         const event = 'after';
@@ -75,7 +78,8 @@ export const routesMerger = (options?: IRoutesMergerConfig): TApp | void => {
             options.app == null ? restify.createServer(
                 Object.assign({ name: options.app_name }, options.createServerArgs || {}))
                 : options.app as restify.Server,
-            options.with_app, options.skip_app_logging, options.skip_app_version_routes,
+            options.with_app, options.skip_app_logging,
+            options.skip_app_version_routes, options.skip_use,
             options.package_, options.version_routes_kwargs
         );
     } else throw Error(`NotImplemented: ${options.server_type}; TODO`);
