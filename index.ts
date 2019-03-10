@@ -11,7 +11,7 @@ const restifyInitApp = (app: restify.Server,
                         package_: IRoutesMergerConfig['package_'],
                         version_routes_kwargs: IRoutesMergerConfig['version_routes_kwargs']): restify.Server => {
     if (with_app != null) app = with_app(app) as restify.Server;
-    if (!skip_use) {
+    if (typeof skip_use !== 'boolean' || !skip_use) {
         app.use(restify.plugins.queryParser());
         app.use(restify.plugins.bodyParser());
     }

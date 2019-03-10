@@ -1,6 +1,6 @@
 {
   "name": "routes-merger",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Generic--connect, restify, express--function to merge routes from a Map.",
   "main": "index.js",
   "scripts": {
