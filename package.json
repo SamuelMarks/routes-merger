@@ -2,6 +2,7 @@
   "name": "routes-merger",
   "version": "0.0.14",
   "description": "Generic--connect, restify, express--function to merge routes from a Map.",
+  "license": "(MIT OR Apache-2.0)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
