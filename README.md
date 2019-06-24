@@ -13,10 +13,14 @@ WiP:
  - [Express](https://github.com/expressjs/express)
  - [http](https://nodejs.org/api/http.html) (Node.JS)
  - [https](https://nodejs.org/api/https.html) (Node.JS)
- 
+
+## Install
+
+    npm i -S @offscale/routes-merger
+
 ## Usage
 
-    import { routesMerger } from 'routes-merger';
+    import { routesMerger } from '@offscale/routes-merger';
 
     routesMerger(/*IRoutesMergerConfig*/);
 
@@ -36,29 +40,12 @@ See `IroutesMwConfig` interface in [routes-merger.d.ts](https://github.com/Samue
 
 Adding a new server? - Expand the `IroutesMwConfig` interface, and add a new short-function that implements it. See others for reference.
 
-### Development setup
-Install the latest Node.JS, `npm i -g typings typescript`, then:
-
-    git clone https://github.com/SamuelMarks/routes-merger
-    git clone https://github.com/SamuelMarks/routes-merger-dist
-    cd routes-merger
-    typings i
-    npm i
-    npm test
-
-Update [routes-merger-dist](https://github.com/SamuelMarks/routes-merger-dist):
-
-    dst="${PWD##*/}"-dist;
-    find -type f -not -path './node_modules*' -a -not -path './.git*' -a -not -path './.idea*' -a -not -path './typings*' -a -not -name '*.ts' -not -name 'ts*' | cpio -pdamv ../"$dst";
-
-Or just a simple:
-
-    cp -r {*.md,*.js*} ../routes-merger-dist
-
 ## Future work
 
   - Finish implementing Express, Connect and generic
   - Tests
+
+---
 
 ## License
 

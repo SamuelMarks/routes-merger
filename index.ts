@@ -1,5 +1,5 @@
 import * as Logger from 'bunyan';
-import { IRoutesMergerConfig, Model, TApp } from 'routes-merger';
+import { IRoutesMergerConfig, Model, TApp } from './index.d';
 import * as restify from 'restify';
 import { dirname } from 'path';
 
@@ -68,7 +68,7 @@ export const routesMerger = (options?: IRoutesMergerConfig): TApp | void => {
     if (options.skip_start_app == null) options.skip_start_app = false;
     if (options.skip_app_version_routes == null) options.skip_app_version_routes = false;
     if (options.skip_app_logging == null) options.skip_app_logging = false;
-    if (options.logger == null) options.logger = Logger.createLogger({ name: 'routes-merger' });
+    if (options.logger == null) options.logger = Logger.createLogger({ name: '@offscale/routes-merger' });
     if (options.version_routes_kwargs == null) options.version_routes_kwargs = {};
 
     // Init server obj
