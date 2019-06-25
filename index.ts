@@ -1,7 +1,10 @@
 import * as Logger from 'bunyan';
-import { IRoutesMergerConfig, Model, TApp } from './index.d';
+import { createLogger } from 'bunyan';
 import * as restify from 'restify';
 import { dirname } from 'path';
+
+import { IRoutesMergerConfig, Model, TApp } from './interfaces.d';
+
 
 const restifyInitApp = (app: restify.Server,
                         with_app: IRoutesMergerConfig['with_app'],
@@ -43,8 +46,9 @@ const restifyStartApp = (skip_start_app: IRoutesMergerConfig['skip_start_app'],
                          onServerStart: IRoutesMergerConfig['onServerStart'],
                          logger: IRoutesMergerConfig['logger'],
                          callback: IRoutesMergerConfig['callback']): void | restify.Server =>
-    skip_start_app ? callback != null && callback(null, app)
+    skip_start_app ? callback != null && callback(void 0, app)
         : app.listen(listen_port, () => {
+            if (logger == null) logger = createLogger({ name: 'myapp' });
             logger.info('%s listening at %s', app.name, app.url);
 
             if (onServerStart != null)
@@ -61,9 +65,9 @@ const handleErr = (callback: (err: Error, res?: TApp) => any) => (e: Error) => {
     return callback(e);
 };
 
-export const routesMerger = (options?: IRoutesMergerConfig): TApp | void => {
+export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     ['routes', 'server_type', 'package_', 'app_name'].forEach(opt =>
-        options[opt] == null && handleErr(options.callback)(TypeError(`\`options.${opt}\` required.`))
+        options[opt] == null && handleErr(options.callback!)(TypeError(`\`options.${opt}\` required.`))
     );
     if (options.skip_start_app == null) options.skip_start_app = false;
     if (options.skip_app_version_routes == null) options.skip_app_version_routes = false;
@@ -92,7 +96,7 @@ export const routesMerger = (options?: IRoutesMergerConfig): TApp | void => {
                 .forEach((route: string) =>
                     typeof program[route] === 'function'
                     && (program[route] as ((app: TApp, namespace: string) => void))(
-                    options.app, `${options.root}/${dirname(dir)}`)
+                    options.app!, `${options.root}/${dirname(dir)}`)
                 );
             routes.add(dir);
         }
