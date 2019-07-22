@@ -1,7 +1,0 @@
-{
-  "name": "orm-mw",
-  "dependencies": {
-    "nodejs-utils": "github:SamuelMarks/nodejs-utils/nodejs-utils.d.ts",
-    "routes-merger": "github:SamuelMarks/routes-merger/routes-merger.d.ts"
-  }
-}
