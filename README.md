@@ -1,7 +1,7 @@
 routes-merger
 =============
 
-Generic--connect, restify, express--function to merge routes from a Map.
+Generic—connect, restify, express—function to merge routes from a [`Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map).
 
 Supported 'servers':
 
@@ -19,26 +19,28 @@ WiP:
     npm i -S @offscale/routes-merger
 
 ## Usage
+```ts
+import { routesMerger } from '@offscale/routes-merger';
 
-    import { routesMerger } from '@offscale/routes-merger';
-
-    routesMerger(/*IRoutesMergerConfig*/);
+routesMerger(/*IRoutesMergerConfig*/);
+```
 
 Some other file:
-
-    export const getUser = (app: restify.Server, namespace: string = ''): void =>
-        app.get(namespace, (req: restify.Request, res: restify.Response, next: restify.Next) => {
-             req.send(200, 'I am user');
-             return next();
-        };
+```ts
+export const getUser = (app: restify.Server, namespace: string = ''): void =>
+    app.get(namespace, (req: restify.Request, res: restify.Response, next: restify.Next) => {
+         req.send(200, 'I am user');
+         return next();
+    };
+```
 
 ## Configuration
 
-See `IroutesMwConfig` interface in [routes-merger.d.ts](https://github.com/SamuelMarks/routes-merger).
+See [`IRoutesMwConfig` interface](interfaces.d.ts).
 
 ## Extending
 
-Adding a new server? - Expand the `IroutesMwConfig` interface, and add a new short-function that implements it. See others for reference.
+Adding a new server? - Expand the `IRoutesMwConfig` interface, and add a new short-function that implements it. See others for reference.
 
 ## Future work
 
