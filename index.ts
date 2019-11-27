@@ -3,8 +3,9 @@ import { createLogger } from 'bunyan';
 import * as restify from 'restify';
 import { dirname } from 'path';
 
-import { IRoutesMergerConfig, Model, TApp } from './interfaces.d';
 import { getFunctionParameters } from '@offscale/nodejs-utils';
+
+import { IRoutesMergerConfig, Model, TApp } from './interfaces.d';
 
 const restifyInitApp = (app: restify.Server,
                         with_app: IRoutesMergerConfig['with_app'],
