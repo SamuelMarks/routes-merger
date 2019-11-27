@@ -4,6 +4,7 @@ import * as restify from 'restify';
 import { dirname } from 'path';
 
 import { IRoutesMergerConfig, Model, TApp } from './interfaces.d';
+import { getFunctionParameters } from '@offscale/nodejs-utils';
 
 const restifyInitApp = (app: restify.Server,
                         with_app: IRoutesMergerConfig['with_app'],
@@ -100,14 +101,30 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     const routes = new Set<string>();
     for (const [dir, program] of options.routes as Map<string, Model>)
         if (['routes', 'route', 'admin'].some(r => dir.indexOf(r) > -1)) {
+            let count = 0;
+            let error: Error | undefined;
             Object
                 .keys(program)
-                .forEach((route: string) =>
-                    typeof program[route] === 'function'
-                    && (program[route] as ((app: TApp, namespace: string) => void))(
-                    options.app!, `${options.root}/${dirname(dir)}`)
-                );
-            routes.add(dir);
+                .forEach((route: string) => {
+                    if (typeof program[route] === 'function'
+                        && getFunctionParameters(program[route]).length === 2) {
+                        ++count;
+                        try {
+                            (program[route] as ((app: TApp, namespace: string) => void))(
+                                options.app!, `${options.root}/${dirname(dir)}`
+                            );
+                        } catch (e) {
+                            error = e;
+                        }
+                    }
+                });
+            if (error != null)
+                if (options.callback != null)
+                    return options.callback(error);
+                else throw error;
+
+            if (count > 0)
+                routes.add(dir);
         }
     options.logger.info(`${options.server_type} registered routes:\t`, Array.from(routes), ';');
 
