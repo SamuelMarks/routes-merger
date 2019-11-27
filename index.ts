@@ -5,7 +5,6 @@ import { dirname } from 'path';
 
 import { IRoutesMergerConfig, Model, TApp } from './interfaces.d';
 
-
 const restifyInitApp = (app: restify.Server,
                         with_app: IRoutesMergerConfig['with_app'],
                         skip_app_logging: IRoutesMergerConfig['skip_app_logging'],
@@ -13,7 +12,9 @@ const restifyInitApp = (app: restify.Server,
                         skip_use: IRoutesMergerConfig['skip_use'],
                         package_: IRoutesMergerConfig['package_'],
                         version_routes_kwargs: IRoutesMergerConfig['version_routes_kwargs']): restify.Server => {
-    if (with_app != null) app = with_app(app) as restify.Server;
+    if (with_app != null)
+        app = with_app(app) as restify.Server;
+
     if (typeof skip_use !== 'boolean' || !skip_use) {
         app.use(restify.plugins.queryParser());
         app.use(restify.plugins.bodyParser());
@@ -30,12 +31,13 @@ const restifyInitApp = (app: restify.Server,
     }
 
     if (!skip_app_version_routes)
-        ['/', '/version', '/api', '/api/version'].map(route_path =>
-            app.get(route_path, (req, res, next) => {
-                res.json(Object.assign({ version: package_.version }, version_routes_kwargs));
-                return next();
-            })
-        );
+        ['/', '/version', '/api', '/api/version']
+            .map(route_path =>
+                app.get(route_path, (req, res, next) => {
+                    res.json(Object.assign({ version: package_.version }, version_routes_kwargs));
+                    return next();
+                })
+            );
 
     return app;
 };
@@ -46,9 +48,9 @@ const restifyStartApp = (skip_start_app: IRoutesMergerConfig['skip_start_app'],
                          onServerStart: IRoutesMergerConfig['onServerStart'],
                          logger: IRoutesMergerConfig['logger'],
                          callback: IRoutesMergerConfig['callback']): void | restify.Server =>
-    skip_start_app ? callback != null && callback(void 0, app)
+    skip_start_app ? (callback == null ? app : callback(void 0, app))
         : app.listen(listen_port, () => {
-            if (logger == null) logger = createLogger({ name: 'myapp' });
+            if (logger == null) logger = createLogger({ name: app.name || 'myapp' });
             logger.info('%s listening at %s', app.name, app.url);
 
             if (onServerStart != null)
@@ -72,12 +74,19 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     if (options.skip_start_app == null) options.skip_start_app = false;
     if (options.skip_app_version_routes == null) options.skip_app_version_routes = false;
     if (options.skip_app_logging == null) options.skip_app_logging = false;
-    if (options.logger == null) options.logger = Logger.createLogger({ name: '@offscale/routes-merger' });
+    if (options.logger == null)
+        options.logger = Logger.createLogger({
+            name: ((options.app
+                || { name: '' }) as {name: string}).name
+                || options.app_name
+                || '@offscale/routes-merger'
+        });
     if (options.version_routes_kwargs == null) options.version_routes_kwargs = {};
 
     // Init server obj
-    if (options.app != null) /* tslint:disable:no-empty */ {
-    } else if (options.server_type === 'restify') {
+    if (options.app != null) {
+        /* tslint:disable:no-empty */
+    } else if (options.server_type === 'restify')
         options.app = restifyInitApp(
             options.app == null ? restify.createServer(
                 Object.assign({ name: options.app_name }, options.createServerArgs || {}))
@@ -86,7 +95,7 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
             options.skip_app_version_routes, options.skip_use,
             options.package_, options.version_routes_kwargs
         );
-    } else throw Error(`NotImplemented: ${options.server_type}; TODO`);
+    else throw Error(`NotImplemented: ${options.server_type}; TODO`);
 
     const routes = new Set<string>();
     for (const [dir, program] of options.routes as Map<string, Model>)
@@ -111,6 +120,6 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
             options.logger,
             options.callback
         );
-    if (typeof options.callback === 'undefined') return options.app;
+    else if (typeof options.callback === 'undefined') return options.app;
     return options.callback(void 0, options.app);
 };
