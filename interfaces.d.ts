@@ -40,6 +40,6 @@ export interface IRoutesMergerConfig {
     logger?: Logger;
     with_app?: (app: TApp) => TApp;
 
-    onServerStart?: (uri: string, app: TApp, next) => void;
+    onServerStart?: (uri: string, app: TApp, next: restify.Next) => void;
     callback?: (err: Error|undefined, app?: TApp) => void;
 }

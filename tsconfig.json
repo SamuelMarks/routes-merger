@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2019",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "noImplicitAny": false,
-    "noImplicitUseStrict": false,
-    "removeComments": true,
-    "noLib": false,
     "preserveConstEnums": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
-  }
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "typeRoots": [
+    "./node_modules/@types"
+  ]
 }
