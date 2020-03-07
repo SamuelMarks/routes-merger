@@ -1,5 +1,7 @@
 routes-merger
 =============
+[![License](https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![npm](https://img.shields.io/npm/v/@offscale/routes-merger)
 
 Generic—connect, restify, express—function to merge routes from a [`Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map).
 
