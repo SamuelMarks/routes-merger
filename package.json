@@ -1,6 +1,6 @@
 {
   "name": "@offscale/routes-merger",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Generic--connect, restify, express--function to merge routes from a Map.",
   "homepage": "https://github.com/SamuelMarks/routes-merger#readme",
   "bugs": {
@@ -19,7 +19,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@offscale/nodejs-utils": "0.0.13",
+    "@offscale/nodejs-utils": "0.0.14",
     "bunyan": "^1.8.12",
     "connect": "^3.7.0",
     "express": "^4.17.1",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.6",
-    "@types/chai": "^4.2.10",
+    "@types/chai": "^4.2.11",
     "@types/connect": "^3.4.33",
     "@types/express": "^4.17.3",
     "@types/restify": "^8.4.2",
