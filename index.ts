@@ -91,7 +91,8 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     } else if (options.server_type === 'restify')
         options.app = restifyInitApp(
             options.app == null ? restify.createServer(
-                Object.assign({ name: options.app_name }, options.createServerArgs || {}))
+                Object.assign({ name: options.app_name }, (options.createServerArgs as restify.ServerOptions) || {})
+                )
                 : options.app as restify.Server,
             options.with_app, options.skip_app_logging,
             options.skip_app_version_routes, options.skip_use,
@@ -121,8 +122,8 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
                 });
             if (error != null)
                 if (options.callback != null)
-                    return options.callback(error);
-                else throw error;
+                    return options.callback(error!);
+                else throw error!;
 
             if (count > 0)
                 routes.add(dir);
