@@ -104,7 +104,7 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     for (const [dir, program] of options.routes as Map<string, Model>)
         if (['routes', 'route', 'admin'].some(r => dir.indexOf(r) > -1)) {
             let count = 0;
-            let error: Error | undefined;
+            let error: Error | undefined | unknown;
             Object
                 .keys(program)
                 .forEach((route: string) => {
@@ -122,7 +122,7 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
                 });
             if (error != null)
                 if (options.callback != null)
-                    return options.callback(error!);
+                    return options.callback(error as Error);
                 else throw error!;
 
             if (count > 0)
