@@ -57,7 +57,8 @@ const restifyStartApp = (skip_start_app: IRoutesMergerConfig['skip_start_app'],
 
             if (onServerStart != null)
                 return onServerStart(app.url, app,
-                    callback == null ? /* tslint:disable:no-empty*/ () => {} : callback
+                    callback == null ? /* tslint:disable:no-empty*/ () => {
+                    } : callback
                 );
             else if (callback != null)
                 return callback(void 0, app);
@@ -71,7 +72,9 @@ const handleErr = (callback: (err: Error, res?: TApp) => any) => (e: Error) => {
 
 export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     ['routes', 'server_type', 'package_', 'app_name'].forEach(opt =>
-        options[opt] == null && handleErr(options.callback!)(TypeError(`\`options.${opt}\` required.`))
+        (options as typeof options & {
+            [key: string]: unknown
+        })[opt] == null && handleErr(options.callback!)(TypeError(`\`options.${opt}\` required.`))
     );
     if (options.skip_start_app == null) options.skip_start_app = false;
     if (options.skip_app_version_routes == null) options.skip_app_version_routes = false;
@@ -79,7 +82,7 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     if (options.logger == null)
         options.logger = Logger.createLogger({
             name: ((options.app
-                || { name: '' }) as {name: string}).name
+                    || { name: '' }) as { name: string }).name
                 || options.app_name
                 || '@offscale/routes-merger'
         });
@@ -91,7 +94,7 @@ export const routesMerger = (options: IRoutesMergerConfig): TApp | void => {
     } else if (options.server_type === 'restify')
         options.app = restifyInitApp(
             options.app == null ? restify.createServer(
-                Object.assign({ name: options.app_name }, (options.createServerArgs as restify.ServerOptions) || {})
+                    Object.assign({ name: options.app_name }, (options.createServerArgs as restify.ServerOptions) || {})
                 )
                 : options.app as restify.Server,
             options.with_app, options.skip_app_logging,
